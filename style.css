@@ -1,45 +1,57 @@
 body {
     font-family: Arial, sans-serif;
     text-align: center;
-    background: #f4f7fb;
-    padding: 20px;
+    background: #f3f6fa;
 }
 
 h1 {
-    color: #1e3a8a;
+    color: #2b4ea2;
 }
 
 .rules {
-    max-width: 700px;
+    width: 700px;
+    max-width: 90%;
     margin: auto;
-    padding: 10px;
-    background: white;
-    border-radius: 10px;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 #board {
     display: grid;
     grid-template-columns: repeat(6, 90px);
-    gap: 8px;
+    gap: 10px;
     justify-content: center;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin: 20px auto;
 }
 
 .cell {
     width: 90px;
     height: 90px;
     border: 3px solid #333;
+    background: white;
     border-radius: 10px;
-    font-size: 42px;
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    background: white;
-    transition: 0.2s;
 }
+
+.current {
+    border: 6px solid limegreen;
+}
+
+.start {
+    background: #d4ffd4;
+}
+
+.goal {
+    background: #ffe58a;
+}
+
+.shape {
+    width: 50px;
+    height: 50px;
+}
+
 .circle {
     border-radius: 50%;
 }
@@ -48,8 +60,17 @@ h1 {
     border-radius: 0;
 }
 
+.diamond {
+    transform: rotate(45deg);
+}
+
 .triangle {
-    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    width: 0;
+    height: 0;
+    background: transparent !important;
+    border-left: 25px solid transparent;
+    border-right: 25px solid transparent;
+    border-bottom: 50px solid;
 }
 
 .red {
@@ -67,37 +88,39 @@ h1 {
 .yellow {
     background: #facc15;
 }
-``
 
-.cell:hover {
-    transform: scale(1.05);
+.triangle.red {
+    border-bottom-color: #ef4444;
 }
 
-.current {
-    border: 5px solid limegreen;
+.triangle.blue {
+    border-bottom-color: #3b82f6;
 }
 
-.start {
-    background: #c8ffd4;
+.triangle.green {
+    border-bottom-color: #22c55e;
 }
 
-.goal {
-    background: #ffe4a3;
+.triangle.yellow {
+    border-bottom-color: #facc15;
+}
+
+.special {
+    font-size: 42px;
 }
 
 button {
-    padding: 10px 20px;
+    padding: 12px 20px;
     font-size: 16px;
 }
 
 #message {
     margin-top: 15px;
+    font-size: 20px;
     font-weight: bold;
-    font-size: 18px;
 }
 
 #moves {
     font-size: 20px;
     font-weight: bold;
-    margin-top: 15px;
 }
