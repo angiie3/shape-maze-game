@@ -1,7 +1,7 @@
 const boardData = [
 
 [
-{special:"start"},
+{special:"start",color:"red"},
 {shape:"circle",color:"red"},
 {shape:"square",color:"red"},
 {shape:"triangle",color:"green"},
