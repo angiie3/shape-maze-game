@@ -1,86 +1,195 @@
 const boardData = [
+
 [
-{shape:"circle",color:"red"},
-{shape:"star",color:"yellow"},
-{shape:"square",color:"blue"},
-{shape:"triangle",color:"green"},
-{shape:"circle",color:"red"},
-{shape:"star",color:"yellow"}
+{shape:"start", color:"green"},
+{shape:"star", color:"yellow"},
+{shape:"square", color:"blue"},
+{shape:"circle", color:"red"},
+{shape:"triangle", color:"green"},
+{shape:"star", color:"yellow"}
 ],
+
 [
-{shape:"square",color:"blue"},
-{shape:"circle",color:"red"},
-{shape:"triangle",color:"green"},
-{shape:"star",color:"yellow"},
-{shape:"square",color:"blue"},
-{shape:"triangle",color:"green"}
+{shape:"circle", color:"red"},
+{shape:"triangle", color:"green"},
+{shape:"square", color:"blue"},
+{shape:"star", color:"yellow"},
+{shape:"circle", color:"red"},
+{shape:"triangle", color:"green"}
+],
+
+[
+{shape:"square", color:"blue"},
+{shape:"circle", color:"red"},
+{shape:"star", color:"yellow"},
+{shape:"triangle", color:"green"},
+{shape:"square", color:"blue"},
+{shape:"circle", color:"red"}
+],
+
+[
+{shape:"triangle", color:"green"},
+{shape:"square", color:"blue"},
+{shape:"circle", color:"red"},
+{shape:"star", color:"yellow"},
+{shape:"triangle", color:"green"},
+{shape:"square", color:"blue"}
+],
+
+[
+{shape:"circle", color:"red"},
+{shape:"triangle", color:"green"},
+{shape:"square", color:"blue"},
+{shape:"circle", color:"red"},
+{shape:"star", color:"yellow"},
+{shape:"triangle", color:"green"}
+],
+
+[
+{shape:"star", color:"yellow"},
+{shape:"square", color:"blue"},
+{shape:"triangle", color:"green"},
+{shape:"circle", color:"red"},
+{shape:"star", color:"yellow"},
+{shape:"goal", color:"gold"}
 ]
+
 ];
 
 const symbols = {
+start:"🚩",
+goal:"🏆",
 circle:"🔴",
 square:"🟦",
 triangle:"🔺",
 star:"⭐"
 };
 
-let currentRow = 0;
-let currentCol = 0;
+let playerRow = 0;
+let playerCol = 0;
+let moves = 0;
 
 function renderBoard() {
+
     const board = document.getElementById("board");
     board.innerHTML = "";
 
-    boardData.forEach((row,rowIndex) => {
-        row.forEach((cell,colIndex) => {
+    boardData.forEach((row,rowIndex)=>{
+
+        row.forEach((cell,colIndex)=>{
 
             const div = document.createElement("div");
+
             div.classList.add("cell");
 
-            if(rowIndex === currentRow &&
-               colIndex === currentCol) {
+            if(cell.shape === "start"){
+                div.classList.add("start");
+            }
+
+            if(cell.shape === "goal"){
+                div.classList.add("goal");
+            }
+
+            if(
+                rowIndex === playerRow &&
+                colIndex === playerCol
+            ){
                 div.classList.add("current");
             }
 
             div.textContent = symbols[cell.shape];
 
-            div.onclick = () =>
+            div.onclick = ()=>{
                 movePlayer(rowIndex,colIndex);
+            };
 
             board.appendChild(div);
+
         });
+
     });
+
+    document.getElementById("moves").textContent =
+        "Moves: " + moves;
 }
 
-function movePlayer(row,col) {
+function movePlayer(row,col){
 
-    const current =
-      boardData[currentRow][currentCol];
-
-    const target =
-      boardData[row][col];
-
-    const sameRow = row === currentRow;
-    const sameCol = col === currentCol;
-
-    if(!sameRow && !sameCol) {
+    if(
+        row === playerRow &&
+        col === playerCol
+    ){
         return;
     }
 
-    const valid =
-      current.shape === target.shape ||
-      current.color === target.color;
+    const current =
+        boardData[playerRow][playerCol];
 
-    if(valid) {
-        currentRow = row;
-        currentCol = col;
-        renderBoard();
+    const target =
+        boardData[row][col];
+
+    const sameRow =
+        row === playerRow;
+
+    const sameCol =
+        col === playerCol;
+
+    if(!sameRow && !sameCol){
+
+        document.getElementById("message")
+            .textContent =
+            "❌ Only horizontal or vertical moves are allowed.";
+
+        return;
     }
+
+    const sameShape =
+        current.shape === target.shape;
+
+    const sameColor =
+        current.color === target.color;
+
+    if(
+        !sameShape &&
+        !sameColor &&
+        target.shape !== "goal"
+    ){
+
+        document.getElementById("message")
+            .textContent =
+            "❌ Must match shape or color.";
+
+        return;
+    }
+
+    playerRow = row;
+    playerCol = col;
+
+    moves++;
+
+    document.getElementById("message")
+        .textContent = "";
+
+    if(target.shape === "goal"){
+
+        document.getElementById("message")
+            .textContent =
+            `🎉 Congratulations! You won in ${moves} moves!`;
+
+    }
+
+    renderBoard();
 }
 
-function restartGame() {
-    currentRow = 0;
-    currentCol = 0;
+function restartGame(){
+
+    playerRow = 0;
+    playerCol = 0;
+    moves = 0;
+
+    document.getElementById("message")
+        .textContent = "";
+
     renderBoard();
 }
 
