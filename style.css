@@ -1,31 +1,75 @@
 body {
     font-family: Arial, sans-serif;
     text-align: center;
+    background: #f4f7fb;
+    padding: 20px;
+}
+
+h1 {
+    color: #1e3a8a;
+}
+
+.rules {
+    max-width: 700px;
+    margin: auto;
+    padding: 10px;
+    background: white;
+    border-radius: 10px;
+    margin-bottom: 15px;
 }
 
 #board {
     display: grid;
-    grid-template-columns: repeat(6, 80px);
-    gap: 5px;
+    grid-template-columns: repeat(6, 90px);
+    gap: 8px;
     justify-content: center;
-    margin: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .cell {
-    width: 80px;
-    height: 80px;
-    border: 2px solid black;
-    font-size: 40px;
+    width: 90px;
+    height: 90px;
+    border: 3px solid #333;
+    border-radius: 10px;
+    font-size: 42px;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     cursor: pointer;
+    background: white;
+    transition: 0.2s;
+}
+
+.cell:hover {
+    transform: scale(1.05);
 }
 
 .current {
     border: 5px solid limegreen;
 }
 
+.start {
+    background: #c8ffd4;
+}
+
 .goal {
-    background: lightgreen;
+    background: #ffe4a3;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+}
+
+#message {
+    margin-top: 15px;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+#moves {
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 15px;
 }
