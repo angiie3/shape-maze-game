@@ -40,6 +40,34 @@ h1 {
     background: white;
     transition: 0.2s;
 }
+.circle {
+    border-radius: 50%;
+}
+
+.square {
+    border-radius: 0;
+}
+
+.triangle {
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}
+
+.red {
+    background: #ef4444;
+}
+
+.blue {
+    background: #3b82f6;
+}
+
+.green {
+    background: #22c55e;
+}
+
+.yellow {
+    background: #facc15;
+}
+``
 
 .cell:hover {
     transform: scale(1.05);
