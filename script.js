@@ -1,73 +1,75 @@
 const boardData = [
 
 [
-{shape:"start", color:"green"},
-{shape:"star", color:"yellow"},
-{shape:"square", color:"blue"},
-{shape:"circle", color:"red"},
-{shape:"triangle", color:"green"},
-{shape:"star", color:"yellow"}
+{special:"start"},
+{shape:"circle",color:"red"},
+{shape:"square",color:"red"},
+{shape:"triangle",color:"green"},
+{shape:"circle",color:"blue"},
+{shape:"diamond",color:"yellow"}
 ],
 
 [
-{shape:"circle", color:"red"},
-{shape:"triangle", color:"green"},
-{shape:"square", color:"blue"},
-{shape:"star", color:"yellow"},
-{shape:"circle", color:"red"},
-{shape:"triangle", color:"green"}
+{shape:"square",color:"green"},
+{shape:"circle",color:"yellow"},
+{shape:"triangle",color:"red"},
+{shape:"diamond",color:"blue"},
+{shape:"square",color:"red"},
+{shape:"triangle",color:"yellow"}
 ],
 
 [
-{shape:"square", color:"blue"},
-{shape:"circle", color:"red"},
-{shape:"star", color:"yellow"},
-{shape:"triangle", color:"green"},
-{shape:"square", color:"blue"},
-{shape:"circle", color:"red"}
+{shape:"circle",color:"green"},
+{shape:"diamond",color:"red"},
+{shape:"square",color:"blue"},
+{shape:"circle",color:"red"},
+{shape:"triangle",color:"blue"},
+{shape:"square",color:"yellow"}
 ],
 
 [
-{shape:"triangle", color:"green"},
-{shape:"square", color:"blue"},
-{shape:"circle", color:"red"},
-{shape:"star", color:"yellow"},
-{shape:"triangle", color:"green"},
-{shape:"square", color:"blue"}
+{shape:"triangle",color:"green"},
+{shape:"square",color:"green"},
+{shape:"diamond",color:"yellow"},
+{shape:"circle",color:"blue"},
+{shape:"triangle",color:"red"},
+{shape:"diamond",color:"red"}
 ],
 
 [
-{shape:"circle", color:"red"},
-{shape:"triangle", color:"green"},
-{shape:"square", color:"blue"},
-{shape:"circle", color:"red"},
-{shape:"star", color:"yellow"},
-{shape:"triangle", color:"green"}
+{shape:"circle",color:"yellow"},
+{shape:"square",color:"blue"},
+{shape:"triangle",color:"green"},
+{shape:"circle",color:"red"},
+{shape:"diamond",color:"blue"},
+{shape:"square",color:"green"}
 ],
 
 [
-{shape:"star", color:"yellow"},
-{shape:"square", color:"blue"},
-{shape:"triangle", color:"green"},
-{shape:"circle", color:"red"},
-{shape:"star", color:"yellow"},
-{shape:"goal", color:"gold"}
+{shape:"diamond",color:"yellow"},
+{shape:"circle",color:"blue"},
+{shape:"square",color:"red"},
+{shape:"triangle",color:"yellow"},
+{shape:"circle",color:"green"},
+{special:"goal"}
 ]
 
 ];
 
-const symbols = {
-start:"🚩",
-goal:"🏆",
-circle:"🔴",
-square:"🟦",
-triangle:"🔺",
-star:"⭐"
-};
-
 let playerRow = 0;
 let playerCol = 0;
 let moves = 0;
+
+function createShape(shape, color) {
+
+    const div = document.createElement("div");
+
+    div.classList.add("shape");
+    div.classList.add(shape);
+    div.classList.add(color);
+
+    return div;
+}
 
 function renderBoard() {
 
@@ -78,47 +80,59 @@ function renderBoard() {
 
         row.forEach((cell,colIndex)=>{
 
-            const div = document.createElement("div");
-
-            div.classList.add("cell");
-
-            if(cell.shape === "start"){
-                div.classList.add("start");
-            }
-
-            if(cell.shape === "goal"){
-                div.classList.add("goal");
-            }
+            const tile = document.createElement("div");
+            tile.classList.add("cell");
 
             if(
                 rowIndex === playerRow &&
                 colIndex === playerCol
             ){
-                div.classList.add("current");
+                tile.classList.add("current");
             }
 
-            div.textContent = symbols[cell.shape];
+            if(cell.special === "start"){
 
-            div.onclick = ()=>{
+                tile.classList.add("start");
+                tile.innerHTML =
+                    '<div class="special">🚩</div>';
+
+            }
+
+            else if(cell.special === "goal"){
+
+                tile.classList.add("goal");
+                tile.innerHTML =
+                    '<div class="special">🏆</div>';
+
+            }
+
+            else {
+
+                tile.appendChild(
+                    createShape(
+                        cell.shape,
+                        cell.color
+                    )
+                );
+
+            }
+
+            tile.onclick = () =>
                 movePlayer(rowIndex,colIndex);
-            };
 
-            board.appendChild(div);
+            board.appendChild(tile);
 
         });
 
     });
 
-    document.getElementById("moves").textContent =
-        "Moves: " + moves;
+    document.getElementById("moves")
+        .textContent = `Moves: ${moves}`;
 }
 
 function movePlayer(row,col){
 
-    if(
-        row === playerRow &&
-        col === playerCol
-    ){
+    if(row===playerRow && col===playerCol){
         return;
     }
 
@@ -138,8 +152,32 @@ function movePlayer(row,col){
 
         document.getElementById("message")
             .textContent =
-            "❌ Only horizontal or vertical moves are allowed.";
+            "❌ Move horizontally or vertically only.";
 
+        return;
+    }
+
+    if(target.special === "goal"){
+
+        playerRow = row;
+        playerCol = col;
+        moves++;
+
+        renderBoard();
+
+        document.getElementById("message")
+            .textContent =
+            `🎉 You won in ${moves} moves!`;
+
+        return;
+    }
+
+    if(current.special === "start"){
+
+        playerRow = row;
+        playerCol = col;
+        moves++;
+        renderBoard();
         return;
     }
 
@@ -149,34 +187,21 @@ function movePlayer(row,col){
     const sameColor =
         current.color === target.color;
 
-    if(
-        !sameShape &&
-        !sameColor &&
-        target.shape !== "goal"
-    ){
+    if(!sameShape && !sameColor){
 
         document.getElementById("message")
             .textContent =
-            "❌ Must match shape or color.";
+            "❌ Must match shape OR color.";
 
         return;
     }
 
     playerRow = row;
     playerCol = col;
-
     moves++;
 
     document.getElementById("message")
         .textContent = "";
-
-    if(target.shape === "goal"){
-
-        document.getElementById("message")
-            .textContent =
-            `🎉 Congratulations! You won in ${moves} moves!`;
-
-    }
 
     renderBoard();
 }
